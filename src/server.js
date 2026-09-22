@@ -11,6 +11,22 @@ app.use(express.json())
 app.use(express.static('public'))
 const port = 3000
 
+//connect the mongo db database
+const mongoose=require('mongoose')
+require('dotenv').config()
+
+//connection
+const connectDB=async()=>{
+    try{
+        const conn=await mongoose.connect(process.env.MONGO_URI);
+        console.log("mongo db database connected sucessfully")
+    }
+    catch (error){
+        console.error("error while connecting",error)
+        process.exit(1);
+    }
+}
+
 //for calling middleware we use app.use
 app.use(logger); //global middleware
 
@@ -49,7 +65,8 @@ res.status(200).json({
 
 //implementing middleware
 
-
+connectDB().then(()=>{
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`)
+})
 })
